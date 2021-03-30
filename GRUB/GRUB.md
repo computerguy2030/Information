@@ -3,6 +3,11 @@ This page was created after digging for information in order to boot multiple li
 
 <br><br>
 <h2>Basics</h2>
+
+<h3>The boot process </h3>
+https://opensource.com/article/17/2/linux-boot-and-startup
+
+
 <h3>Booting the Linux kernel: </h3>
 Basic information on how the linux kernel is booted:
 <br><br>
@@ -25,9 +30,8 @@ Load the linux kernel:
 <br><br>
 
 3. Find "initrd" file (most likely in: )
-* /boot/intel_ucode.img (Manjaro)
 * /casper/initrd* (Ubuntu)
-* /live/initrd.img-*-amd64 (Kali)
+* /live/initrd.img-*-amd64 (Kali, Manjaro)
 * /isolinux/vmlinuz (Fedora)
 <br><br>
 
@@ -118,7 +122,7 @@ Boot Options: (located after linux vmlinuz ): <br>
 <br><br>
 Summary:
 
-To create your grub file copy and modify information in grub.cfg/syslinux.cfg and GLIM github repository: https://github.com/thias/glim
+To create your grub file copy and modify information in grub.cfg/syslinux.cfg and GLIM github repository: https://github.com/thias/glim. Start with the least conplexity and then add boot options.
 
 <br><br>
 Extensive list of linux kernel boot params:
@@ -174,7 +178,7 @@ Boot options from syslinux.cfg:
 
 initrd=/live/initrd.img boot=live config live-media=removable nopersistence noprompt timezone=Etc/UTC block.events_dfl_poll_msecs=1000 splash noautologin module=Tails slab_nomerge slub_debug=FZP mce=0 vsyscall=none page_poison=1 init_on_alloc=1 init_on_free=1 mds=full,nosmt union=aufs  noapic noapm nodma nomce nolapic nomodeset nosmp vga=normal
 
-For booting iso from local machine, use the following boot options: (taken from combination of GLIM and syslinux.cfg)
+For booting iso from local machine (not flashed USB), use the following boot options: (taken from combination of GLIM and syslinux.cfg)
 ```
 root=(loop) boot=live findiso=${isofile} config apparmor=1 nopersistence noprompt timezone=Etc/UTC block.events_dfl_poll_msecs=1000 splash noautologin module=Tails slab_nomerge slub_debug=FZP mce=0 vsyscall=none page_poison=1 init_on_alloc=1 init_on_free=1 mds=full,nosmt quiet
 ```
@@ -192,7 +196,17 @@ Whole menuentry:
 
 <h2> Boot isos from USB: </h2>
 
-1. Create GRUB partition
-2. Install GRUB
-3. Add GRUB config files + isos
-4. Test
+<h3> 1. Create GRUB partition (use fdisk or GTK default) </h3>
+Create ~500MB partition formatted in FAT32 for EFI parition (will contain EFI and /boot)
+Create partition to store all isos
+
+
+<h3> 2. Install GRUB </h3>
+
+* mount EFI partition
+* execute: ```grub-install --efi-directory=(directory of mounted drive) --boot-directory=(directory of mounted drive)/boot --removable ``` 
+eg. grub-install --efi-directory=/mnt/usb --boot-directory=/mnt/usb/boot --removable
+
+
+<h3> 3. Add GRUB config files + isos </h3>
+<h3> 4. Test </h3>
